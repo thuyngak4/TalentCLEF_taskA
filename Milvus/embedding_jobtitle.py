@@ -15,9 +15,9 @@ def average_pool(last_hidden_states: Tensor, attention_mask: Tensor) -> Tensor:
     last_hidden = last_hidden_states.masked_fill(~attention_mask[..., None].bool(), 0.0)
     return last_hidden.sum(dim=1) / attention_mask.sum(dim=1)[..., None]
 
-def insert_embeddings(input_texts, input_ids):
+def insert_embeddings(collection_name, input_texts, input_ids):
     connect_milvus()  # Kết nối Milvus
-    collection = Collection("job_embeddings_ger")  # Mở collection
+    collection = Collection(collection_name)  # Mở collection
 
     batch_size = 200  # Số lượng phần tử mỗi batch
     num_batches = (len(input_texts) + batch_size - 1) // batch_size  # Tính số batch
@@ -44,10 +44,15 @@ def insert_embeddings(input_texts, input_ids):
 
 if __name__ == "__main__":
     # insert_embeddings()
-    file_path = os.getenv("file_path_val_ger_corpus")
+    file_path = os.getenv("file_path_val_chi_corpus")
     queries_df = pd.read_csv(file_path, sep="\t")
 
-    insert_embeddings(queries_df.jobtitle.to_list(), queries_df.c_id.to_list())
+    #collection_name = "job_embeddings" #Embedding của tiếng anh
+    #collection_name = "job_embeddings_ger"
+    #collection_name = "job_embeddings_span"
+    collection_name = "job_embeddings_china"
+
+    insert_embeddings(collection_name, queries_df.jobtitle.to_list(), queries_df.c_id.to_list())
     
     
 

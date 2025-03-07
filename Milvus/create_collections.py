@@ -1,9 +1,7 @@
 from pymilvus import FieldSchema, CollectionSchema, DataType, Collection, utility
 from connect_milvus import connect_milvus  # Import kết nối
 
-collection_name = "job_embeddings_ger"
-
-def create_collection():
+def create_collection(collection_name):
     connect_milvus()  # Kết nối trước
 
     # Xóa collection nếu đã tồn tại
@@ -32,4 +30,9 @@ def create_collection():
     print(f"✅ Collection '{collection_name}' đã được tạo!")
 
 if __name__ == "__main__":
-    create_collection()
+    #collection_name = "job_embeddings" #Embedding của tiếng anh
+    #collection_name = "job_embeddings_ger"
+    #collection_name = "job_embeddings_span"
+    collection_name = "job_embeddings_china"
+
+    create_collection(collection_name)

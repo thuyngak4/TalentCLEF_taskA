@@ -7,12 +7,9 @@ from embedding_jobtitle import average_pool
 import pandas as pd
 import os
 
-print(0)
 # Load tokenizer & model
 tokenizer = AutoTokenizer.from_pretrained('intfloat/multilingual-e5-large')
-print(1)
 model = AutoModel.from_pretrained('intfloat/multilingual-e5-large')
-print(1)
 
 # Tìm kiếm trong Milvus
 def search_milvus(collection, query_text, top_k=10):
@@ -37,9 +34,9 @@ def search_milvus(collection, query_text, top_k=10):
     return results[0]  # Trả về danh sách tài liệu phù hợp
 
 # Xuất file theo TREC Run Format
-def generate_trec_run(queries_df, output_file="trec_run_gers.trec", top_k=10):
+def generate_trec_run(queries_df, output_file="trec_run_china.trec", top_k=10):
     connect_milvus()
-    collection = Collection("job_embeddings_ger")
+    collection = Collection("job_embeddings_china")
     with open(output_file, "w") as f:
         for q_id, query_text in zip(queries_df.q_id, queries_df.jobtitle):
             results = search_milvus(collection, query_text, top_k=top_k)
@@ -50,10 +47,9 @@ def generate_trec_run(queries_df, output_file="trec_run_gers.trec", top_k=10):
 
     print(f"✅ File {output_file} đã được tạo thành công!")
 
-corpus_path = os.getenv("file_path_val_ger_corpus")
-queries_path = os.getenv("file_path_val_ger_query")
+queries_path = os.getenv("file_path_val_chi_query")
 
 queries_df = pd.read_csv(queries_path, sep="\t")
 
 # Tạo file TREC Run
-generate_trec_run(queries_df, output_file="trec_results_ger.trec", top_k=20) 
+generate_trec_run(queries_df, output_file="trec_results_china.trec", top_k=20) 
